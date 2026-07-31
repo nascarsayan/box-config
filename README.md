@@ -6,7 +6,7 @@ rootless dev sandbox: `nix-user-chroot` + `home-manager`, no root anywhere.
 You do not clone this by hand — `box init` does it, to `~/.config/box`.
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/nascarsayan/box/main/install.sh | sh -
+curl -fsSL https://snas.s.gy/box | sh -
 ```
 
 ## Layout
