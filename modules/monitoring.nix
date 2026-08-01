@@ -3,11 +3,12 @@
 {
   meta = {
     summary = "Process and system inspection";
-    description = ''
-      btop instead of top, procs instead of ps, and sysz as a systemd TUI.
-    '';
     size = "~120M";
-    default = true;
+    apps = [
+      { name = "btop"; url = "https://github.com/aristocratos/btop/releases"; }
+      { name = "procs"; url = "https://github.com/dalance/procs/releases"; }
+      { name = "sysz"; url = "https://github.com/joehillen/sysz/releases"; }
+    ];
   };
 
   config.home.packages = with pkgs; [ btop procs sysz ];

@@ -2,15 +2,12 @@
 
 {
   meta = {
-    summary = "zellij, alongside tmux";
-    description = ''
-      zellij as an alternative multiplexer. tmux is part of the core config and
-      always present -- this is purely additive, for when you want panes without
-      tmux's keybindings.
-    '';
+    summary = "Terminal multiplexer, beside tmux";
     size = "~90M";
-    default = false;
+    apps = [
+      { name = "zellij"; url = "https://github.com/zellij-org/zellij/releases"; }
+    ];
   };
 
-  config.home.packages = [ pkgs.zellij ];
+  config.home.packages = with pkgs; [ zellij ];
 }

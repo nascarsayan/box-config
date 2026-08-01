@@ -2,13 +2,13 @@
 
 {
   meta = {
-    summary = "HTTP and file transfer";
-    description = ''
-      xh for HTTP requests (a faster httpie), croc for sending files between
-      machines, and jnv for interactively exploring JSON with jq expressions.
-    '';
+    summary = "HTTP, transfer and JSON";
     size = "~180M";
-    default = true;
+    apps = [
+      { name = "xh"; url = "https://github.com/ducaale/xh/releases"; }
+      { name = "croc"; url = "https://github.com/schollz/croc/releases"; }
+      { name = "jnv"; url = "https://github.com/ynqa/jnv/releases"; }
+    ];
   };
 
   config.home.packages = with pkgs; [ xh croc jnv ];

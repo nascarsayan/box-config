@@ -23,7 +23,11 @@ in
   inherit names;
 
   meta = lib.genAttrs names metaOf;
-  defaults = lib.filter (n: (metaOf n).default or false) names;
+
+  # Everything, on purpose: a fresh install offers the full set preselected and
+  # the picker is where you take things out. There is deliberately no per-module
+  # "default" flag -- two notions of default is one too many.
+  defaults = names;
 
   # Unknown names throw rather than no-op: a typo should say so, not silently
   # leave a tool uninstalled and look like a nixpkgs problem.
