@@ -51,8 +51,16 @@
         modules = moduleSet.defaults;
       };
 
+      # `or null` guards: local.json is hand-editable and a JSON null for a list
+      # otherwise surfaces as "expected a list but found null" from deep inside
+      # lib.subtractLists, with nothing pointing at the actual cause.
+      orDefault = name: if (local.${name} or null) == null then defaults.${name} else local.${name};
+
       settings = defaults // local // {
         git = defaults.git // (local.git or { });
+        modules = orDefault "modules";
+        passthrough = orDefault "passthrough";
+        sessionVariables = orDefault "sessionVariables";
       };
 
       inherit (settings) system;
