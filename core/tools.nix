@@ -8,7 +8,9 @@
 
   programs.fzf = {
     enable = true;
-    enableZshIntegration = true;
+    # Sourced by hand in zsh/zshrc-body.zsh instead, so the root-only noise it
+    # produces inside a user namespace can be filtered. See the comment there.
+    enableZshIntegration = false;
     defaultCommand = "fd --type f --hidden --exclude .git";
     defaultOptions = [ "--height 40%" "--border" ];
 

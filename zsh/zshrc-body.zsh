@@ -129,6 +129,32 @@ fi
   [[ -n "$d" ]] && cd "$d"
 }
 
+# fzf's zsh integration, sourced here rather than by home-manager.
+#
+# It snapshots $options and later restores it with `eval 'options=(...)'`.
+# Assigning that array re-applies `privileged off`, and zsh implements that by
+# calling setgid/setuid/setgroups -- which the user namespace denies when running
+# as root, so every shell starts with two copies of
+#
+#   (eval):unsetopt:1: can't drop privileges; failed to set supplementary group
+#   list: operation not permitted
+#   (eval):1: can't change option: privileged
+#
+# Purely cosmetic: fzf loads fine either way. Filtered rather than blanket
+# silenced, so any other fzf error still reaches the terminal. Only for root --
+# an ordinary user never hits it.
+if (( $+commands[fzf] )); then
+  # Ctrl-R stays with the history manager; fzf keeps Ctrl-T and Alt-C.
+  export FZF_CTRL_R_COMMAND=""
+  if (( EUID == 0 )); then
+    source <(fzf --zsh) 2> >(grep -v \
+      -e "can't drop privileges" \
+      -e "can't change option: privileged" >&2)
+  else
+    source <(fzf --zsh)
+  fi
+fi
+
 zstyle ':completion:*' menu select
 zstyle ':completion:*:descriptions' format '%d'
 
