@@ -1,14 +1,11 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   meta = {
     summary = "Password store";
-    size = "~90M";
     apps = [
-      { name = "pass"; url = "https://www.passwordstore.org"; }
-      { name = "sshpass"; url = "https://sourceforge.net/projects/sshpass"; }
+      { name = "pass"; pkg = "pass"; size = "~50M"; url = "https://www.passwordstore.org"; }
+      { name = "sshpass"; pkg = "sshpass"; size = "~1M"; url = "https://sourceforge.net/projects/sshpass"; }
     ];
   };
-
-  config.home.packages = with pkgs; [ pass sshpass ];
 }

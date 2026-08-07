@@ -48,7 +48,8 @@
         # Resolved by box, so nix never stats outside the flake (keeps eval pure).
         passthrough = [ ];
         sessionVariables = { };
-        modules = moduleSet.defaults;
+        apps = moduleSet.defaults;
+        modules = null;
       };
 
       # `or null` guards: local.json is hand-editable and a JSON null for a list
@@ -56,9 +57,17 @@
       # lib.subtractLists, with nothing pointing at the actual cause.
       orDefault = name: if (local.${name} or null) == null then defaults.${name} else local.${name};
 
+      # Selection is per app. A local.json written before the split has only
+      # `modules`, so expand it rather than silently installing the default set
+      # over someone's choices -- an upgrade must not change what is installed.
+      selectedApps =
+        if (local.apps or null) != null then local.apps
+        else if (local.modules or null) != null then moduleSet.appsForModules local.modules
+        else defaults.apps;
+
       settings = defaults // local // {
         git = defaults.git // (local.git or { });
-        modules = orDefault "modules";
+        apps = selectedApps;
         passthrough = orDefault "passthrough";
         sessionVariables = orDefault "sessionVariables";
       };
@@ -79,6 +88,8 @@
       moduleMeta = moduleSet.meta;
       moduleDefaults = moduleSet.defaults;
       moduleNames = moduleSet.names;
+      appNames = moduleSet.appNames;
+      appAutomatic = moduleSet.automatic;
 
       # Also usable directly: home-manager switch --flake .#sandbox
       homeConfigurations.sandbox = home-manager.lib.homeManagerConfiguration {
@@ -94,9 +105,10 @@
           ./core/real-home.nix
           ./core/home.nix
         ]
-        ++ moduleSet.modulesFor {
+        ++ [{ home.packages = moduleSet.packagesFor { inherit pkgs; enabled = settings.apps; }; }]
+        ++ moduleSet.configsFor {
           inherit pkgs settings;
-          enabled = settings.modules;
+          enabled = settings.apps;
         };
       };
 

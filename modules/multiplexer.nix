@@ -1,16 +1,12 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   meta = {
     summary = "Terminal multiplexer, beside tmux";
-    size = "~90M";
-    # Off unless asked for: tmux is already configured in core, so this is a
-    # second multiplexer for people who want one, not a default.
-    default = false;
     apps = [
-      { name = "zellij"; url = "https://github.com/zellij-org/zellij/releases"; }
+      # tmux is already set up in core, so this is a second multiplexer for
+      # people who want one rather than something every machine needs.
+      { name = "zellij"; pkg = "zellij"; size = "~90M"; default = false; url = "https://github.com/zellij-org/zellij/releases"; }
     ];
   };
-
-  config.home.packages = with pkgs; [ zellij ];
 }

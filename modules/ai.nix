@@ -1,17 +1,13 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   meta = {
     summary = "Coding agents";
-    size = "~750M";
-    # Off unless asked for: an unattended install lands on machines nobody is
-    # sitting at, and coding agents are the largest thing here by far.
-    default = false;
     apps = [
-      { name = "claude-code"; url = "https://github.com/anthropics/claude-code/releases"; }
-      { name = "codex"; url = "https://github.com/openai/codex/releases"; }
+      # Off by default: an unattended install lands on machines nobody is
+      # sitting at, and these are the largest things here.
+      { name = "claude-code"; pkg = "claude-code"; size = "~270M"; default = false; url = "https://github.com/anthropics/claude-code/releases"; }
+      { name = "codex"; pkg = "codex"; size = "~490M"; default = false; url = "https://github.com/openai/codex/releases"; }
     ];
   };
-
-  config.home.packages = with pkgs; [ claude-code codex ];
 }
