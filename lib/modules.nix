@@ -24,10 +24,18 @@ in
 
   meta = lib.genAttrs names metaOf;
 
-  # Everything, on purpose: a fresh install offers the full set preselected and
-  # the picker is where you take things out. There is deliberately no per-module
-  # "default" flag -- two notions of default is one too many.
+  # Two contexts, two answers, because they are different questions.
+  #
+  # Interactive: everything preselected. Someone is watching, the picker shows
+  # each module's size, and removing one is a keystroke.
+  #
+  # Unattended (`--yes`, `curl | sh`): only modules that did not opt out via
+  # `meta.default = false`. Nobody is there to decline, so the heavyweights have
+  # to be asked for. A module declares this itself; the box binary knows nothing
+  # about what any module contains.
   defaults = names;
+
+  automatic = lib.filter (n: (metaOf n).default or true) names;
 
   # Unknown names throw rather than no-op: a typo should say so, not silently
   # leave a tool uninstalled and look like a nixpkgs problem.
