@@ -1,9 +1,11 @@
 # box-config
 
-The nix configuration that [`box`](https://github.com/nascarsayan/box) applies. A
-rootless dev sandbox: `nix-user-chroot` + `home-manager`, no root anywhere.
+This repository stores the personal configuration for two installers:
 
-You do not clone this by hand — `box init` does it, to `~/.config/box`.
+- [`box`](https://github.com/nascarsayan/box) applies the Nix configuration in a rootless sandbox.
+- [`init-sh`](https://github.com/nascarsayan/init-sh) renders the portable templates on a macOS or Linux host.
+
+You do not clone this repository by hand. Each installer gets the required files.
 
 ```sh
 curl -fsSL https://snas.s.gy/box | sh -
@@ -17,6 +19,7 @@ lib/modules.nix    module discovery: reads modules/ and exposes moduleMeta
 modules/*.nix      optional features, one file each   <- tracked, contributable
 core/*.nix         always-on config (shell, git, tmux, tool integrations)
 zsh/*.zsh          zsh fragments, read with builtins.readFile
+portable/*.j2     non-Nix templates rendered by init-sh
 pkgs/              the ,gwq / ,rv / ,gcw helpers
 local.json         your paths and module selection    <- gitignored
 local.nix          optional nix overrides             <- gitignored
@@ -26,6 +29,14 @@ The tracked/untracked split is the point. Everything that describes *what a modu
 is* is tracked, so a change you make shows up as an ordinary `git diff` and can be
 sent upstream. Everything that describes *your machine* is gitignored, so it never
 appears in one.
+
+## Portable templates
+
+`portable/` contains the non-Nix configuration. `init-sh` renders these files with
+MiniJinja and writes them to the host home directory.
+
+The templates include shared files from `zsh/` where the behavior is the same.
+This arrangement keeps one source for shell functions and aliases.
 
 ## Adding a module
 
