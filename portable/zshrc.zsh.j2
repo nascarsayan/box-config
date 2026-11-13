@@ -25,7 +25,8 @@ zinit ice wait"0" lucid; zinit snippet OMZ::plugins/docker-compose/docker-compos
 zinit ice wait"0" lucid; zinit snippet OMZ::plugins/helm/helm.plugin.zsh
 zinit ice wait"0" lucid; zinit snippet OMZ::plugins/git-extras/git-extras.plugin.zsh
 zinit ice wait"0" lucid; zinit snippet https://raw.githubusercontent.com/ahmetb/kubectl-aliases/master/.kubectl_aliases
-zinit ice wait"0" lucid; zinit load zsh-users/zsh-autosuggestions
+# atload: bind the widgets now; otherwise hints start only after the first command.
+zinit ice wait"0" lucid atload"_zsh_autosuggest_start"; zinit load zsh-users/zsh-autosuggestions
 zinit ice wait"0" lucid blockf; zinit load zsh-users/zsh-completions
 zinit load zsh-users/zsh-syntax-highlighting
 
