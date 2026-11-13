@@ -12,16 +12,22 @@ mkcd() {
   mkdir -p -- "$1" && cd -- "$1"
 }
 
+# $SSHPASS if already exported, else the pass entry.
 if command -v pass >/dev/null 2>&1; then
   sshp() {
-    SSHPASS="$(pass show "${BOX_SSH_PASS_ENTRY:-ssh/default}")" sshpass -e ssh "$@"
+    SSHPASS="${SSHPASS:-$(pass show "${BOX_SSH_PASS_ENTRY:-ssh/default}")}" sshpass -e ssh "$@"
   }
+fi
+
+if (( $+commands[eza] )); then
+  alias ls='eza -lh --group-directories-first --icons=auto'
 fi
 
 DISABLE_MAGIC_FUNCTIONS=true
 DISABLE_UPDATE_PROMPT=true
 
-# ~800 generated aliases (k, kgp, ...) from the pinned kubectl-aliases input.
+# ~800 generated aliases (k, kgp, ...): box ships the pinned kubectl-aliases
+# input here; host mode loads them through zinit instead.
 if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/box/kubectl_aliases" ]]; then
   source "${XDG_CONFIG_HOME:-$HOME/.config}/box/kubectl_aliases"
 fi
@@ -114,7 +120,9 @@ if command -v ghq >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
       | cut -f2
   }
 
-  dev() {
+  # Not `dev`: that name belongs to a CLI on some machines, and a function would
+  # shadow it.
+  wt() {
     local moveto
     moveto="$(ghq-path)" || return 1
     [[ -z "$moveto" ]] && return 1
@@ -123,11 +131,13 @@ if command -v ghq >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
 fi
 
 # A function, not an alias: it has to cd this shell to the path box prints.
-,gwq() {
-  local d
-  d="$(box gwq "$@")" || return $?
-  [[ -n "$d" ]] && cd "$d"
-}
+if (( $+commands[box] )); then
+  ,gwq() {
+    local d
+    d="$(box gwq "$@")" || return $?
+    [[ -n "$d" ]] && cd "$d"
+  }
+fi
 
 # fzf's zsh integration, sourced here rather than by home-manager.
 #

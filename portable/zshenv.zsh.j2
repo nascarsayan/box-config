@@ -7,3 +7,15 @@ path=("${HOME}/.local/bin"{% if brew_prefix %} "{{ brew_prefix }}/bin" "{{ brew_
 export GHQ_ROOT="{{ ghq_root }}"
 export EDITOR="${EDITOR:-hx}"
 export VISUAL="${VISUAL:-${EDITOR}}"
+
+[[ -d "${KREW_ROOT:-$HOME/.krew}/bin" ]] && path+=("${KREW_ROOT:-$HOME/.krew}/bin")
+
+# Machine-specific environment; survives re-rendering. Runs for every zsh, so
+# keep it to cheap assignments. Always under $HOME, not $XDG_CONFIG_HOME: that
+# is inherited from the parent here, so a login and a child shell would look in
+# different places.
+typeset -g INIT_SH_ZSH_DIR="${INIT_SH_ZSH_DIR:-$HOME/.config/zsh}"
+for _init_sh_env in "$INIT_SH_ZSH_DIR"/zshenv.d/*.zsh(N); do
+  source "$_init_sh_env"
+done
+unset _init_sh_env

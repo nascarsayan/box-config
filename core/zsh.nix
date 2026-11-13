@@ -88,8 +88,6 @@
     envExtra = builtins.readFile ../zsh/zshenv-body.zsh;
 
     shellAliases = {
-      ls = "eza -lh --group-directories-first --icons=auto";
-
       # box dispatches directly when already inside the sandbox.
       ",," = "box tmux";
       ",rv" = "box review";
