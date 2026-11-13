@@ -1,5 +1,4 @@
-# Interactive zsh config. Kept as .zsh so `zsh -n` can check it and there is no
-# nix ''${...} escaping to get wrong.
+# Interactive zsh config. Kept as .zsh so `zsh -n` can check it.
 
 alias git_current_branch="git rev-parse --abbrev-ref HEAD"
 alias ggpush='git push origin $(git_current_branch)'
@@ -25,12 +24,6 @@ fi
 
 DISABLE_MAGIC_FUNCTIONS=true
 DISABLE_UPDATE_PROMPT=true
-
-# ~800 generated aliases (k, kgp, ...): box ships the pinned kubectl-aliases
-# input here; host mode loads them through zinit instead.
-if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/box/kubectl_aliases" ]]; then
-  source "${XDG_CONFIG_HOME:-$HOME/.config}/box/kubectl_aliases"
-fi
 
 # kubecolor, but only for subcommands it can safely colorize. A bare
 # `alias kubectl=kubecolor` hangs exec/attach/port-forward/logs -f/get -w, because
@@ -130,16 +123,7 @@ if command -v ghq >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
   }
 fi
 
-# A function, not an alias: it has to cd this shell to the path box prints.
-if (( $+commands[box] )); then
-  ,gwq() {
-    local d
-    d="$(box gwq "$@")" || return $?
-    [[ -n "$d" ]] && cd "$d"
-  }
-fi
-
-# fzf's zsh integration, sourced here rather than by home-manager.
+# fzf's zsh integration.
 #
 # It snapshots $options and later restores it with `eval 'options=(...)'`.
 # Assigning that array re-applies `privileged off`, and zsh implements that by

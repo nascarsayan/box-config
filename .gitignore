@@ -1,8 +1,0 @@
-# This machine's answers. Written by `box init` and `box modules`.
-# Gitignored on purpose: the tracked tree stays a clean, contributable library.
-local.json
-local.nix
-
-# nix build symlinks
-result
-result-*

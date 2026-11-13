@@ -10,7 +10,7 @@
 typeset -ga EDA_LD_PREFIXES
 (( ${#EDA_LD_PREFIXES} )) || EDA_LD_PREFIXES=(/tools/)
 
-_box_strip_ld() {
+_strip_ld() {
   local -a parts kept
   local p keep
   parts=("${(@s/:/)LD_LIBRARY_PATH}")
@@ -27,12 +27,12 @@ _box_strip_ld() {
 
 if [[ -o interactive && -n "${LD_LIBRARY_PATH:-}" ]]; then
   export __ORIG_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
-  _box_strip_ld
+  _strip_ld
 fi
 
 eda_on()  { [[ -n "${__ORIG_LD_LIBRARY_PATH:-}" ]] && export LD_LIBRARY_PATH="$__ORIG_LD_LIBRARY_PATH"; }
-eda_off() { _box_strip_ld; }
+eda_off() { _strip_ld; }
 
-# path is a nix profile plus the inherited host PATH, which duplicates entries
-# freely. -U keeps the first occurrence of each and drops the rest.
+# path collects duplicates from inherited and added entries; -U keeps the
+# first occurrence of each and drops the rest.
 typeset -gU path
