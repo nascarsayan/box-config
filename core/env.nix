@@ -15,6 +15,11 @@
     VISUAL = "hx";
     PAGER = "less";
 
+    # $HOME is the sandbox, which would move Python's per-user site-packages
+    # off the real home and drop host .pth files with it (cscfg's
+    # cluster_deployment.pth adds its venv to sys.path).
+    PYTHONUSERBASE = "${settings.realHome}/.local";
+
     # Symlinked out (real-home.nix) so the token survives rebuilds.
     GH_CONFIG_DIR = "${config.xdg.configHome}/gh";
 
