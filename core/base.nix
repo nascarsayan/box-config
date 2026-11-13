@@ -24,8 +24,6 @@
     eza
     bat
     broot
-    unzip
-    xz
 
     # data
     jq
@@ -37,20 +35,11 @@
     atuin
     mise
 
-    # Pinned, not inherited: the host PATH is appended, so omitting these would mix
-    # a nix zsh with the distro's coreutils.
-    coreutils
-    gnused
-    gnugrep
-    gawk
-    findutils
-    diffutils
-    less
-    which
-    file
-    curl
-    openssh
-    util-linux
+    # Base userland (coreutils, sed, grep, awk, find, diff, less, which, file,
+    # curl, unzip, xz, util-linux, ssh) comes from the host PATH, which box appends.
+    # Never add openssh: nixpkgs' upstream ssh reads the host /etc/ssh/ssh_config,
+    # and RHEL's crypto-policies include sets GSSAPIKexAlgorithms, a distro-patch
+    # option upstream rejects as fatal.
   ]
   # ,gwq / ,rv / ,gcw
   ++ (with boxPkgs; [ box-gwq-review box-gwq-gc box-review-open ])
