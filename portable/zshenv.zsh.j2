@@ -2,13 +2,10 @@
 
 # Keep the first occurrence when package managers add duplicate entries.
 typeset -gU path
-path=("${HOME}/.local/bin"{% if brew_prefix %} "{{ brew_prefix }}/bin" "{{ brew_prefix }}/sbin"{% endif %} $path)
 
 export GHQ_ROOT="{{ ghq_root }}"
 export EDITOR="${EDITOR:-hx}"
 export VISUAL="${VISUAL:-${EDITOR}}"
-
-[[ -d "${KREW_ROOT:-$HOME/.krew}/bin" ]] && path+=("${KREW_ROOT:-$HOME/.krew}/bin")
 
 # Machine-specific environment; survives re-rendering. Runs for every zsh, so
 # keep it to cheap assignments. Always under $HOME, not $XDG_CONFIG_HOME: that
