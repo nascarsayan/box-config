@@ -1,5 +1,8 @@
 # box-config
 
+> **Retired (2026-11-19).** No longer maintained; this repository is archived.
+> Its contents were folded into a private tool.
+
 Shell configuration templates for two installers:
 
 - [`init-sh`](https://github.com/nascarsayan/init-sh) renders them on a macOS or Linux host.
